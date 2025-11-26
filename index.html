@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sigmavalue Real Estate Analysis Dashboard</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'sigma-blue': '#1a3a60', /* Dark blue for primary elements */
+                        'sigma-green': '#00a878', /* Green for action buttons */
+                        'bg-dark': '#1e293b', /* Dark background for sections */
+                        'bg-light': '#f8fafc',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                },
+            },
+        };
+    </script>
+    <!-- Load Chart.js for data visualization -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Custom Styles for attractive UI/UX */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            min-height: 100vh;
+        }
+        .main-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center; /* Center main sections */
+            padding: 0;
+        }
+        .section {
+            width: 100%;
+            max-width: 1200px; /* Max width for content readability */
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            border-radius: 1rem;
+        }
+        /* Style for the chatbot container (centered appearance) */
+        .chatbot-container {
+            height: 600px; /* Fixed height for a comfortable chat experience */
+            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
+            overflow: hidden;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 1rem;
+        }
+        .chatbot-iframe {
+            height: 100%;
+            width: 100%;
+        }
+        #summaryOutput {
+            border-left: 5px solid #1a3a60;
+        }
+        .analysis-section {
+             display: grid;
+             grid-template-columns: 1fr 2fr; /* Chart takes 2/3 width */
+             gap: 2rem;
+        }
+        @media (max-width: 1024px) {
+            .analysis-section {
+                grid-template-columns: 1fr; /* Stack columns on smaller screens */
+            }
+        }
+    </style>
+</head>
+<body class="bg-bg-light">
+
+    <!-- Header -->
+    <header class="bg-sigma-blue shadow-lg h-16 flex items-center justify-center w-full">
+        <h1 class="text-white text-3xl font-extrabold tracking-wide">
+            🏡 Real Estate Market Intelligence
+        </h1>
+    </header>
+
+    <!-- Main Content Area -->
+    <div class="main-container">
+        
+        <!-- 1. Company Intro / Assignment Context -->
+        <section class="section bg-white text-center mt-8">
+            <h2 class="text-3xl font-bold text-sigma-blue mb-4">Sigmavalue Full Stack Developer Assignment</h2>
+            <p class="text-gray-600 max-w-3xl mx-auto">
+                This project demonstrates a full-stack solution for real estate data analysis, integrating a chatbot interface
+                with a Django backend (simulated here) to deliver structured market insights, including natural language summaries, price trends, and raw data tables.
+            </p>
+        </section>
+
+        <!-- 2. Chatbot Interface -->
+        <section class="section bg-white">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4 text-center">
+                Interactive Market Query
+            </h2>
+            <div class="chatbot-container shadow-xl">
+                <!-- Denser.ai Embed (Main Chat Input) -->
+                <iframe
+                    class="chatbot-iframe"
+                    frameborder="0"
+                    src="https://denser.ai/u/embed/chatbot_6nl9i0t05cl6fhjffptuc">
+                </iframe>
+            </div>
+
+            <!-- Manual Analysis Input (Simulates Django Trigger - placed right below chat) -->
+            <div class="p-4 bg-gray-50 rounded-lg max-w-3xl mx-auto mt-4 border border-gray-200">
+                <label for="queryInput" class="text-sm font-medium text-gray-700 block mb-2">
+                    Run Analysis Manually:
+                </label>
+                <div class="flex space-x-2">
+                    <input type="text" id="queryInput" placeholder="e.g., Analyze Wakad" 
+                           class="flex-grow p-2 border border-gray-300 rounded-lg focus:ring-sigma-green focus:border-sigma-green text-sm">
+                    <button id="analyzeBtn" onclick="analyzeQuery()" 
+                            class="bg-sigma-green hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-150 ease-in-out">
+                        Analyze
+                    </button>
+                </div>
+                <p class="text-xs text-gray-500 mt-1">Queries: "Analyze Wakad", "Compare Ambegaon Budruk and Aundh demand trends"</p>
+            </div>
+        </section>
+
+        <!-- 3. Analysis Results (Two-Column Layout) -->
+        <section class="section bg-white">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-6 border-b pb-2">
+                Detailed Market Insights
+            </h2>
+            
+            <div class="analysis-section">
+                <!-- Left Block: Summary -->
+                <div class="bg-white shadow-md rounded-xl p-4 flex flex-col space-y-4">
+                    <div class="flex items-center space-x-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-sigma-blue" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M4 4a2 2 0 00-2 2v8a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2H4zm11 5a1 1 0 100-2 1 1 0 000 2zm-4 0a1 1 0 100-2 1 1 0 000 2zm-4 0a1 1 0 100-2 1 1 0 000 2zM9 13a1 1 0 000 2h6a1 1 0 100-2H9z" clip-rule="evenodd" />
+                        </svg>
+                        <h3 class="text-xl font-semibold text-gray-800">1. Analysis Summary</h3>
+                    </div>
+                    <p id="summaryOutput" class="text-gray-700 p-4 bg-sigma-blue/10 rounded-lg text-sm" style="white-space: pre-wrap; font-weight: 500;">
+                        Analysis for the default locality (Wakad) will load here shortly.
+                    </p>
+
+                    <!-- Filtered Data Table (Moved to be near the summary/chart on the left for quick reference) -->
+                    <h3 class="text-xl font-semibold text-gray-800 mt-4">3. Filtered Data Table</h3>
+                    <div class="overflow-x-auto bg-gray-50 rounded-lg p-2">
+                        <table class="min-w-full divide-y divide-gray-200" id="dataTable">
+                            <thead class="bg-gray-100">
+                                <tr></tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-gray-200">
+                                <tr><td colspan="5" class="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-500">Data will load automatically on page start.</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <button class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-semibold py-2 px-4 rounded-lg text-sm transition duration-150 ease-in-out" 
+                            onclick="alert('Bonus feature: This would trigger the Django backend to serve a downloadable CSV file.')">
+                        Download Data (CSV)
+                    </button>
+                </div>
+
+                <!-- Right Block: Chart -->
+                <div class="bg-white shadow-md rounded-xl p-4">
+                    <div class="flex items-center space-x-3 mb-4">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-sigma-green" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z" />
+                        </svg>
+                        <h3 class="text-xl font-semibold text-gray-800">2. Price & Demand Trend</h3>
+                    </div>
+                    <div class="h-96 w-full">
+                        <canvas id="trendChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+        // MOCK DATA: Simulates the JSON response from your Django Backend
+        const MOCK_API_RESPONSE = {
+            "Analyze Wakad": {
+                "summary": "Analysis for **Wakad**: The locality exhibits the strongest market performance in the dataset, recording a **26.37% cumulative price appreciation** between 2022 and 2024. The average flat rate reached **9,543 INR/SqFt** in 2024, supported by high investor confidence and robust demand.",
+                "chart_data": [
+                    { "Year": 2020, "AvgFlatRate": 9117, "TotalDemand": 3521 },
+                    { "Year": 2021, "AvgFlatRate": 8092, "TotalDemand": 1541 },
+                    { "Year": 2022, "AvgFlatRate": 7551, "TotalDemand": 794 },
+                    { "Year": 2023, "AvgFlatRate": 8827, "TotalDemand": 948 },
+                    { "Year": 2024, "AvgFlatRate": 9543, "TotalDemand": 884 }
+                ],
+                "table_data": [
+                    { "Location": "Wakad", "Year": 2024, "AvgRate": 9543, "DemandUnits": 884, "ResidentialSales": 850 },
+                    { "Location": "Wakad", "Year": 2023, "AvgRate": 8827, "DemandUnits": 948, "ResidentialSales": 910 },
+                    { "Location": "Wakad", "Year": 2022, "AvgRate": 7551, "DemandUnits": 794, "ResidentialSales": 750 }
+                ]
+            },
+            "Compare Ambegaon Budruk and Aundh demand trends": {
+                "summary": "Comparison: **Ambegaon Budruk** is a high-volume, entry-level market, recording **2,337 units sold** in 2024 at an average rate of **7,073 INR/SqFt**. **Aundh** is a premium, low-volume market, recording **510 units sold** at a significantly higher average rate of **11,774 INR/SqFt**.",
+                "chart_data": [
+                    { "Year": 2024, "AvgFlatRate": 7073, "Location": "Ambegaon Budruk", "TotalDemand": 2337 },
+                    { "Year": 2024, "AvgFlatRate": 11774, "Location": "Aundh", "TotalDemand": 510 }
+                ],
+                "table_data": [
+                    { "Location": "Ambegaon Budruk", "Year": 2024, "AvgRate": 7073, "DemandUnits": 2337, "ResidentialSales": 2100 },
+                    { "Location": "Aundh", "Year": 2024, "AvgRate": 11774, "DemandUnits": 510, "ResidentialSales": 436 }
+                ]
+            }
+        };
+
+        let chartInstance = null;
+        
+        async function analyzeQuery() {
+            const query = document.getElementById('queryInput').value.trim();
+            if (!query) return alert("Please enter a query (e.g., 'Analyze Wakad' or 'Compare Ambegaon Budruk and Aundh demand trends').");
+
+            const analyzeBtn = document.getElementById('analyzeBtn');
+            analyzeBtn.disabled = true;
+            analyzeBtn.innerText = 'Processing...';
+
+            try {
+                // --- MOCK DATA SELECTION (for canvas preview) ---
+                let data = null;
+                if (query.toLowerCase().includes('wakad')) {
+                    data = MOCK_API_RESPONSE["Analyze Wakad"];
+                } else if (query.toLowerCase().includes('compare')) {
+                    data = MOCK_API_RESPONSE["Compare Ambegaon Budruk and Aundh demand trends"];
+                } else {
+                    data = {
+                        summary: `No specific analysis found in mock data for: "${query}". Try 'Analyze Wakad' or 'Compare Ambegaon Budruk and Aundh demand trends'.`,
+                        chart_data: [],
+                        table_data: []
+                    };
+                }
+                // --- END MOCK DATA SELECTION ---
+
+                // Render the three outputs
+                renderSummary(data.summary);
+                renderChart(data.chart_data, query);
+                renderTable(data.table_data);
+
+            } catch (error) {
+                console.error("Analysis failed:", error);
+                document.getElementById('summaryOutput').innerHTML = `<span class="text-red-600">Error: Analysis failed. Check console for details.</span>`;
+            } finally {
+                analyzeBtn.disabled = false;
+                analyzeBtn.innerText = 'Analyze';
+            }
+        }
+
+        function renderSummary(summaryText) {
+            document.getElementById('summaryOutput').innerHTML = summaryText.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+        }
+
+        function renderChart(chartData, query) {
+            const ctx = document.getElementById('trendChart').getContext('2d');
+            
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
+
+            if (chartData.length === 0) {
+                 // Draw placeholder text manually
+                 ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+                 ctx.font = '16px Inter, sans-serif';
+                 ctx.textAlign = 'center';
+                 ctx.fillStyle = '#9ca3af';
+                 ctx.fillText('No chart data available for this query.', ctx.canvas.width / 2, 180);
+                 return;
+            }
+
+            const isComparison = chartData.some(item => item.Location && item.Year === 2024);
+            const chartType = isComparison ? 'bar' : 'line';
+            
+            const labels = isComparison ? chartData.map(item => item.Location) : chartData.map(item => item.Year);
+            const rates = chartData.map(item => item.AvgFlatRate);
+            const demand = chartData.map(item => item.TotalDemand);
+
+            chartInstance = new Chart(ctx, {
+                type: chartType,
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Avg Flat Rate (INR/SqFt)',
+                            data: rates,
+                            borderColor: '#1a3a60',
+                            backgroundColor: 'rgba(26, 58, 96, 0.7)',
+                            yAxisID: 'y-rate',
+                            type: 'bar', 
+                            borderRadius: 4
+                        },
+                        {
+                            label: 'Total Demand (Units)',
+                            data: demand,
+                            borderColor: '#00a878',
+                            backgroundColor: 'rgba(0, 168, 120, 0.4)',
+                            yAxisID: 'y-demand',
+                            type: 'line', 
+                            fill: false,
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: `Market Trends for ${labels.join(' & ')}`,
+                            font: { size: 16 }
+                        }
+                    },
+                    scales: {
+                        'y-rate': {
+                            type: 'linear',
+                            position: 'left',
+                            title: { display: true, text: 'Price Rate (INR)' }
+                        },
+                        'y-demand': {
+                            type: 'linear',
+                            position: 'right',
+                            title: { display: true, text: 'Demand Units' },
+                            grid: { drawOnChartArea: false }
+                        },
+                        x: {
+                            title: { display: true, text: isComparison ? 'Locality' : 'Year' }
+                        }
+                    }
+                }
+            });
+        }
+
+        function renderTable(tableData) {
+            const tableBody = document.querySelector('#dataTable tbody');
+            const tableHead = document.querySelector('#dataTable thead tr');
+            
+            tableBody.innerHTML = '';
+            tableHead.innerHTML = '';
+
+            if (tableData.length === 0) {
+                tableBody.innerHTML = '<tr><td colspan="5" class="px-6 py-4 whitespace-nowrap text-sm text-center text-gray-500">No filtered data available.</td></tr>';
+                return;
+            }
+
+            const headers = Object.keys(tableData[0]);
+            headers.forEach(header => {
+                const th = document.createElement('th');
+                th.className = 'px-6 py-3 text-left text-xs font-medium text-gray-700 uppercase tracking-wider';
+                th.innerText = header.replace(/([A-Z])/g, ' $1').trim(); 
+                tableHead.appendChild(th);
+            });
+
+            tableData.forEach(row => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-gray-50';
+                headers.forEach(header => {
+                    const td = document.createElement('td');
+                    td.className = 'px-6 py-4 whitespace-nowrap text-sm text-gray-900';
+                    td.innerText = row[header];
+                    tr.appendChild(td);
+                });
+                tableBody.appendChild(tr);
+            });
+        }
+
+        // AUTO-LOAD DEFAULT ANALYSIS ON PAGE LOAD
+        window.addEventListener('load', () => {
+             // Default query to show immediate results
+             document.getElementById('queryInput').value = "Analyze Wakad";
+             analyzeQuery();
+        });
+    </script>
+</body>
+</html>
